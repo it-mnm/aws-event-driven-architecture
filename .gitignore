@@ -1,0 +1,15 @@
+# 테라폼 로컬 캐시 디렉토리 차단
+.terraform/
+.terraform.lock.hcl
+
+# 테라폼 상태 장부 (보안/인프라 비밀 정보 포함) 차단
+*.tfstate
+*.tfstate.*
+
+# 🎯 [핵심] 실물 데이터 및 변수 주입 파일 절대 차단!
+*.tfvars
+*.tfvars.json
+
+# 크래시 로그 및 임시 파일 차단
+crash.log
+crash.*.log
