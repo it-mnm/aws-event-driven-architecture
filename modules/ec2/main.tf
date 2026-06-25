@@ -28,6 +28,20 @@ resource "aws_instance" "web" {
   # 퍼블릭 서브넷에 들어갈 컴퓨터이므로 외부 IP(Public IP)를 자동으로 할당받도록 설정
   associate_public_ip_address = true 
 
+    # 🎯 [11일차 핵심 포인트] 컴퓨터가 켜지자마자 실행할 쉘 스크립트를 주입합니다.
+
+  user_data_replace_on_change = true
+  user_data = <<-EOF
+              #!/bin/bash
+              sudo apt-get update -y
+              sudo apt-get install nginx -y
+              sudo systemctl start nginx
+              sudo systemctl enable nginx
+              
+              # 잘 작동하는지 확인용 홈페이지만들기
+              echo "<h1>Hello from MyeongHyeon's DevOps World! via Terraform</h1>" | sudo tee /var/www/html/index.html
+              EOF
+
   tags = {
     Name = "mh-web-server-${var.env_name}"
   }
