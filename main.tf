@@ -10,3 +10,13 @@ module "vpc" {
   public_subnets     = var.public_subnets
   private_subnets    = var.private_subnets
 }
+
+module "ec2" {
+  source = "./modules/ec2"
+
+  env_name         = var.env_name
+  
+  # 🎯 [조립 포인트] VPC 모듈이 출구로 뱉어낸 퍼블릭 서브넷 첫 번째 방(0번 index)과 보안 그룹 ID를 직통으로 꽂아줍니다!
+  subnet_id        = module.vpc.public_subnet_ids[0]
+  public_web_sg_id = module.vpc.public_web_sg_id
+}
