@@ -65,3 +65,41 @@ resource "aws_route_table_association" "public" {
   subnet_id      = aws_subnet.public[count.index].id
   route_table_id = aws_route_table.public.id
 }
+
+
+# modules/vpc/main.tf (맨 아래에 추가)
+
+# 웹 서비스를 위한 퍼블릭 보안 그룹 (경비실)
+resource "aws_security_group" "public_web" {
+  name        = "mh-public-web-sg-${var.env_name}"
+  description = "Allow HTTP and HTTPS traffic to Public zone"
+  vpc_id      = aws_vpc.this.id # 우리 연구소 빌딩 ID를 지정
+
+  # [인바운드 규칙 1] 외부 모든 곳(0.0.0.0/0)에서 80번(HTTP)으로 들어오는 것 허용
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # [인바운드 규칙 2] 외부 모든 곳(0.0.0.0/0)에서 443번(HTTPS)으로 들어오는 것 허용
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # [아웃바운드 규칙] 내부에서 바깥세상으로 나가는 트래픽은 전부 허용
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1" # -1은 모든 프로토콜을 의미합니다.
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "mh-public-web-sg-${var.env_name}"
+  }
+}
