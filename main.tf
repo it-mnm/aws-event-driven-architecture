@@ -20,3 +20,21 @@ module "ec2" {
   subnet_id        = module.vpc.public_subnet_ids[0]
   public_web_sg_id = module.vpc.public_web_sg_id
 }
+
+# main.tf (최상위 루트 폴더용 맨 아래에 추가)
+
+module "alb" {
+  source = "./modules/alb"
+
+  env_name          = var.env_name
+  vpc_id            = module.vpc.vpc_id
+  public_subnet_ids = module.vpc.public_subnet_ids
+  public_web_sg_id  = module.vpc.public_web_sg_id
+}
+
+
+resource "aws_lb_target_group_attachment" "web" {
+  target_group_arn = module.alb.target_group_arn # ALB 공장에서 나온 목적지 주소
+  target_id        = module.ec2.instance_id      # EC2 공장에서 나온 컴퓨터 ID
+  port             = 80
+}

@@ -16,3 +16,8 @@ output "private_subnet_ids" {
 output "public_web_sg_id" {
   value = module.vpc.public_web_sg_id
 }
+
+output "alb_dns_name" {
+    value = module.alb.alb_dns_name
+    description = "Application Load Balancer 도메인 주소"
+}
