@@ -21,3 +21,8 @@ output "alb_dns_name" {
     value = module.alb.alb_dns_name
     description = "Application Load Balancer 도메인 주소"
 }
+
+output "sqs_queue_url" {
+  value       = module.sqs.queue_url
+  description = "메인 SQS 큐의 URL 주소"
+}

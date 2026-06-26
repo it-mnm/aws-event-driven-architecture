@@ -38,3 +38,9 @@ resource "aws_lb_target_group_attachment" "web" {
   target_id        = module.ec2.instance_id      # EC2 공장에서 나온 컴퓨터 ID
   port             = 80
 }
+
+module "sqs" {
+  source = "./modules/sqs"
+
+  env_name = var.env_name
+}
