@@ -44,3 +44,11 @@ module "sqs" {
 
   env_name = var.env_name
 }
+
+
+module "lambda" {
+  source = "./modules/lambda"
+
+  env_name  = var.env_name
+  queue_arn = module.sqs.queue_arn 
+}
