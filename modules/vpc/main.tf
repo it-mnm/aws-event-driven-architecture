@@ -69,7 +69,7 @@ resource "aws_route_table_association" "public" {
 
 # modules/vpc/main.tf (맨 아래에 추가)
 
-# 웹 서비스를 위한 퍼블릭 보안 그룹 (경비실)
+# 웹 서비스를 위한 퍼블릭 보안 그룹
 resource "aws_security_group" "public_web" {
   name        = "mh-public-web-sg-${var.env_name}"
   description = "Allow HTTP and HTTPS traffic to Public zone"
@@ -90,8 +90,30 @@ resource "aws_security_group" "public_web" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+# [인바운드 규칙 3] Prometheus 웹 콘솔 접속용 (9090)
+  ingress {
+    from_port   = 9090
+    to_port     = 9090
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-  # [아웃바운드 규칙] 내부에서 바깥세상으로 나가는 트래픽은 전부 허용
+  # [인바운드 규칙 4] Grafana 대시보드 접속용 (3000)
+  ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # [인바운드 규칙 5] Node Exporter 메트릭 수집용 (9100)
+  ingress {
+    from_port   = 9100
+    to_port     = 9100
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  # [아웃바운드 규칙] 내부에서 바깥으로 나가는 트래픽은 전부 허용
   egress {
     from_port   = 0
     to_port     = 0

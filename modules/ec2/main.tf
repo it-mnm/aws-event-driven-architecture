@@ -40,8 +40,36 @@ resource "aws_instance" "web" {
               
               # 잘 작동하는지 확인용 홈페이지만들기
               echo "<h1>Hello from MyeongHyeon's DevOps World! via Terraform</h1>" | sudo tee /var/www/html/index.html
-              EOF
+              
+              # 1. Node Exporter 설치 (서버 자원 수집기)
+              cd /opt
+              wget https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz
+              tar -xvf node_exporter-1.6.1.linux-amd64.tar.gz
+              ./node_exporter-1.6.1.linux-amd64/node_exporter &
 
+              # 2. Prometheus 설치 및 설정 자동화
+              wget https://github.com/prometheus/prometheus/releases/download/v2.47.0/prometheus-2.47.0.linux-amd64.tar.gz
+              tar -xvf prometheus-2.47.0.linux-amd64.tar.gz
+              cd prometheus-2.47.0.linux-amd64
+
+              # 🎯 테라폼 내부 이스케이프 설정을 피해 안전하게 yaml 파일 한 줄로 덮어쓰기
+              echo -e "global:\n  scrape_interval: 15s\n\nscrape_configs:\n  - job_name: 'prometheus'\n    static_configs:\n      - targets: ['localhost:9090', 'localhost:9100']" > prometheus.yml
+
+              # 프로메테우스 엔진 가동
+              ./prometheus --config.file=prometheus.yml &
+
+              # 3. Grafana 설치 및 가동
+              sudo apt-get install -y apt-transport-https software-properties-common wget
+              sudo mkdir -p /etc/apt/keyrings/
+              wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/grafana.gpg > /dev/null
+              echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main" | sudo tee /etc/apt/sources.list.d/grafana.list
+
+              sudo apt-get update
+              sudo apt-get install -y grafana
+              sudo systemctl daemon-reload
+              sudo systemctl start grafana-server
+              sudo systemctl enable grafana-server            
+              EOF
   tags = {
     Name = "mh-web-server-${var.env_name}"
   }
