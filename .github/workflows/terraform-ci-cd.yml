@@ -62,3 +62,15 @@ jobs:
           TF_VAR_vpc_cidr: "10.0.0.0/16"
           TF_VAR_public_subnets: '["10.0.1.0/24", "10.0.2.0/24"]'
           TF_VAR_private_subnets: '["10.0.11.0/24", "10.0.12.0/24"]'
+
+
+      # 8. 실물 인프라 일괄 삭제 가동
+      - name: Terraform Destroy
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform destroy -auto-approve
+        env:
+          TF_VAR_env_name: "dev"
+          TF_VAR_availability_zones: '["ap-northeast-2a", "ap-northeast-2c"]'
+          TF_VAR_vpc_cidr: "10.0.0.0/16"
+          TF_VAR_public_subnets: '["10.0.1.0/24", "10.0.2.0/24"]'
+          TF_VAR_private_subnets: '["10.0.11.0/24", "10.0.12.0/24"]'
