@@ -1,6 +1,5 @@
-# modules/ec2/outputs.tf
-
-output "instance_id" {
-  value       = aws_instance.web.id
-  description = "생성된 EC2 인스턴스의 ID"
+# Auto Scaling Group 명칭 출력
+output "asg_name" {
+  value       = aws_autoscaling_group.app.name
+  description = "생성된 Auto Scaling Group의 이름"
 }
