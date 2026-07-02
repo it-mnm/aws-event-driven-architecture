@@ -41,16 +41,15 @@ CloudWatch Metric Alarm의 `GreaterThanOrEqualToThreshold` 및 `LessThanThreshol
 
 ## 📸 Verification (증빙 자료)
 
-*(확보하신 캡처 이미지들을 `./images/` 등의 폴더에 넣고 아래 경로를 수정하여 연결해 주세요!)*
 
 ### 1. CloudWatch Alarms & EC2 ASG Status
 > 트래픽 폭증 시 30%, 50% 임계치 경보가 동시에 트리거(In Alarm)되지만, Terraform 코드로 묶어둔 `max_size = 4` 제한이 정확히 작동하여 무분별한 비용 증식 없이 최대 방어선인 4대까지만 안정적으로 스케일 아웃됨을 확인했습니다.
-<!-- <img src="./images/cloudwatch_alarm.png" width="80%" alt="CloudWatch Alarm In Alarm 상태" /> -->
-<!-- <img src="./images/ec2_instances_4.png" width="80%" alt="EC2 인스턴스 4대 가동 화면" /> -->
+<img src="./images/cloudwatch_alarm.png" width="80%" alt="CloudWatch Alarm In Alarm 상태" />
+<img src="./images/ec2_instances_4.png" width="80%" alt="EC2 인스턴스 4대 가동 화면" />
 
 ### 2. Grafana Real-time Dashboard
 > `stress` 종료 시점을 기점으로 CPU 사용률 안정기로 복귀하는 대시보드 시계열 화면입니다.
-<!-- <img src="./images/grafana_dashboard.png" width="80%" alt="Grafana CPU 절벽 그래프" /> -->
+<img src="./images/grafana_dashboard.png" width="80%" alt="Grafana CPU 절벽 그래프" />
 
 ---
 
