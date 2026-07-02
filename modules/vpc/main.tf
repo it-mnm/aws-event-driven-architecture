@@ -75,6 +75,14 @@ resource "aws_security_group" "public_web" {
   description = "Allow HTTP and HTTPS traffic to Public zone"
   vpc_id      = aws_vpc.this.id # 우리 연구소 빌딩 ID를 지정
 
+  # SSH 원격 접속용 22번 포트 개방
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # EC2 Instance Connect 가 진입할 수 있도록 전체 개방
+  }
+
   # [인바운드 규칙 1] 외부 모든 곳(0.0.0.0/0)에서 80번(HTTP)으로 들어오는 것 허용
   ingress {
     from_port   = 80
